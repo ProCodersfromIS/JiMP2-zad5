@@ -1,7 +1,7 @@
 /**
 * \file aghInclude.h
 * \author Beata Gie³baga & Kamil Dawidów
-* \date 06.03.2014
+* \date 03.06.2014
 * \brief Plik includuj¹cy potrzebne biblioteki i pliki nag³ówkowe klas
 */
 // -------------------------------------------------------------------------
