@@ -18,7 +18,6 @@ using namespace std;
 
 #include "aghException.h"
 #include "aghContainer.h"
-#include "aghVector.h"
 #include "aghSlist.h"
 #include "aghDlist.h"
 // -------------------------------

@@ -86,6 +86,7 @@ public:
 
 };
 // -------------------------------------------------------------------------
+
 // Definicje metod szablonu
 // -------------------------------------------------------------------------
 
@@ -117,7 +118,7 @@ aghDlist<T>::aghDlist(const aghDlist<T>& pattern)
 template <class T>
 aghDlist<T>::aghDlist(const aghContainer<T>& pattern)
 {
-   this->aghContainer::operator=(pattern);
+   this->aghContainer<T>::operator=(pattern);
 }
 // --------------------------------------------------------------
 
@@ -244,7 +245,7 @@ bool aghDlist<T>::remove(int n)
 template <class T>
 aghDlist<T>& aghDlist<T>::operator=(const aghDlist<T>& right)
 {
-    this->aghContainer::operator=(right);
+    this->aghContainer<T>::operator=(right);
     return *this;
 }
 // ---------------------------------------------------------------
