@@ -25,8 +25,13 @@ private:
     aghSnode<T>* next; ///< wskaŸnik do nastêpnego wêz³a
 
 public:
-    /// \brief Konstruktor bezparametrow
+    /// \brief Konstruktor bezparametrowy
     aghSnode();
+
+    /// \brief Konstruktor kopiuj¹cy
+    ///
+    /// \param pattern - obiekt macierzysty
+    aghSnode(const aghSnode<T>& pattern);
 
     /// \brief Destruktor
     ~aghSnode();
@@ -57,6 +62,14 @@ template <class T>
 aghSnode<T>::aghSnode()
 {
     next = nullptr;
+}
+// ---------------------------------------------------------------
+
+template <class T>
+aghSnode<T>::aghSnode(const aghSnode<T>& pattern)
+{
+    next = pattern.getNext();
+    data = pattern.getData();
 }
 // ---------------------------------------------------------------
 

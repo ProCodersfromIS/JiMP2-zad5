@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------
 
 #include "aghDnode.h"
+#include "aghContainer.h"
 // -------------------------------------------------------------------------
 
 /**
@@ -21,13 +22,18 @@
 // -------------------------------------------------------------------------
 */
 template <class T>
-class aghDlist
+class aghDlist : public aghContainer<T>
 {
 private:
-    aghDnode* head; ///< wskaŸnik do pierwszego elementu listy
-    aghDnode* tail; ///< wskaŸnik do ostatniego elementu listy
+    aghDnode<T>* head; ///< wskaŸnik do pierwszego elementu listy
+    aghDnode<T>* tail; ///< wskaŸnik do ostatniego elementu listy
     int length; ///< iloœæ elementów w liœcie
 
+    /// \brief Metoda zwraca wskaŸnik do ¿¹danego wêz³a
+    ///
+    /// \param n - indeks wêz³a
+    /// \return wskaŸnik do wêz³a
+    aghDnode<T>* getDnodePtr(int n) const;
 public:
     /// \brief Konstruktor bezparametrowy
     aghDlist();
@@ -84,25 +90,59 @@ public:
 // -------------------------------------------------------------------------
 
 template <class T>
-aghDlist<T>::aghDlist<T>()
+aghDnode<T>* aghDlist<T>::getDnodePtr(int n) const
 {
+    if (this->invalidIndex(n))
+        throw aghException(0, "Index out of range", __FILE__, __LINE__);
+    aghDnode<T> *it = head;
+    for (int i = 0; i < n; ++i)
+        it = it->getNext();
+    return it;
+}
+// ---------------------------------------------------------------
+
+template <class T>
+aghDlist<T>::aghDlist()
+{
+    length = 0;
     head = nullptr;
     tail = nullptr;
-    length = 0;
 }
 // ---------------------------------------------------------------
 
 template <class T>
 aghDlist<T>::aghDlist(const aghDlist<T>& pattern)
 {
-
+    length = 0;
+    head = nullptr;
+    tail = nullptr;
+    this->operator=(pattern);
 }
 // ---------------------------------------------------------------
 
 template <class T>
-aghDlist<T>::~aghDlist<T>()
+aghDlist<T>::aghDlist(const aghContainer<T>& pattern)
 {
+    length = 0; 
+    head = nullptr;
+    tail = nullptr;
+    for (int i = 0; i < pattern.size(); ++i)
+        this->append(pattern.at(i));
+}
+// --------------------------------------------------------------
 
+template <class T>
+aghDlist<T>::~aghDlist()
+{
+    aghDnode<T>* it = head;
+    aghDnode<T>* helper;
+
+    for (int i = 0; i < this->size(); ++i)
+    {
+        helper = it;
+        it = it->getNext();
+        delete helper;
+    }
 }
 // ---------------------------------------------------------------
 
@@ -111,7 +151,8 @@ T& aghDlist<T>::at(int n) const
 {
     if (this->invalidIndex(n))
         throw aghException(0, "Index out of range", __FILE__, __LINE__);
-
+    aghDnode<T>* helper = this->getDnodePtr(n);
+    return helper->getData();
 }
 // --------------------------------------------------------------
 
@@ -125,6 +166,42 @@ int aghDlist<T>::size(void) const
 template <class T>
 bool aghDlist<T>::insert(int n, T const& element)
 {
+    if (n < 0 || n > this->size())
+        return false;
+
+    aghDnode<T>* helper = head;
+    if (n == 0)
+    {
+        head = new aghDnode<T>;
+        head->setNext(helper);
+        head->setData(element);
+        head->setPrev(nullptr);
+        if (tail == nullptr)
+            tail = head;
+        if (helper != nullptr)
+            helper->setPrev(head);
+    }
+    else if (n == this->size())
+    {
+        helper = tail;
+        tail = new aghDnode<T>;
+        tail->setData(element);
+        tail->setNext(nullptr);
+        tail->setPrev(helper);
+        helper->setNext(tail);
+    }
+    else
+    {
+        aghDnode<T>* it = this->getDnodePtr(n);
+        helper = it->getPrev();
+        helper->setNext(new aghDnode<T>);
+        helper->getNext()->setData(element);
+        helper->getNext()->setNext(it);
+        it->setPrev(helper->getNext());
+    }
+
+    ++length;
+    return true;
 
 }
 // --------------------------------------------------------------
@@ -132,14 +209,52 @@ bool aghDlist<T>::insert(int n, T const& element)
 template <class T>
 bool aghDlist<T>::remove(int n)
 {
+    if (this->invalidIndex(n))
+        return false;
 
+    aghDnode<T>* helper = head;
+    if (n == 0)
+    {
+        head = head->getNext();
+        if (head != nullptr)
+        {
+            head->setPrev(nullptr);
+            if (helper->getNext() != nullptr)
+                helper->setPrev(head);
+        }
+        else
+            tail = nullptr;
+    }
+    else if (n == this->size() - 1)
+    {
+        helper = tail;
+        tail = tail->getPrev();
+        if (tail != nullptr)
+        {
+            tail->setNext(nullptr);
+            if (helper->getPrev() != nullptr)
+                helper->setNext(tail);
+        }
+        else
+            head = nullptr;
+    }
+    else
+    {
+        aghDnode<T>* it = this->getDnodePtr(n);
+        it->getNext()->setPrev(it->getPrev());
+        it->getPrev()->setNext(it->getNext());
+    }
+    delete helper;
+
+    --length;
+    return true;
 }
 // ---------------------------------------------------------------
 
 template <class T>
-aghDlist<T>& aghDlist<T>::operator=(const aghDlist<T>& pattern)
+aghDlist<T>& aghDlist<T>::operator=(const aghDlist<T>& right)
 {
-    this->aghContainer::operator(right);
+    this->aghContainer::operator=(right);
     return *this;
 }
 // ---------------------------------------------------------------

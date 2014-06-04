@@ -204,7 +204,7 @@ bool aghVector<T>::insert(int n, T const& element)
 template <class T>
 bool aghVector<T>::remove(int n)
 {
-    if (n > this->size() || n < 0)
+    if (this->invalidIndex(n))
         return false;
     this->editTable(-1, n);
     return true;

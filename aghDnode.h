@@ -39,12 +39,12 @@ public:
     void setData(const T& _data);
 
     /// \brief Metoda zwraca referencjê do zapisanych danych
-    T& getData(void) const;
+    T& getData(void);
 
     /// \brief Metoda zmienia wartoœæ pola next
     ///
     /// \param _next - nowa wartoœæ pola next
-    void setNext(const aghDnode<T>* _next);
+    void setNext(aghDnode<T>* const _next);
 
     /// \brief Metoda zwraca wartoœæ pola next
     ///
@@ -54,7 +54,7 @@ public:
     /// \brief Metoda zmienia wartoœæ pola prev
     ///
     /// \param _prev - nowa wartoœæ pola prev
-    void setPrev(const aghDnode<T>* _prev);
+    void setPrev(aghDnode<T>* const _prev);
 
     /// \brief Metoda zwraca wartoœæ pola prev
     ///
@@ -89,14 +89,14 @@ void aghDnode<T>::setData(const T& _data)
 // ---------------------------------------------------------------
 
 template <class T>
-T& aghDnode<T>::getData(void) const
+T& aghDnode<T>::getData(void)
 {
     return data;
 }
 // ---------------------------------------------------------------
 
 template <class T>
-void aghDnode<T>::setNext(const aghDnode<T>* _next)
+void aghDnode<T>::setNext(aghDnode<T>* const _next)
 {
     next = _next;
 }
@@ -110,7 +110,7 @@ aghDnode<T>* aghDnode<T>::getNext(void) const
 // ---------------------------------------------------------------
 
 template <class T>
-void aghDnode<T>::setPrev(const aghDnode<T>* _prev)
+void aghDnode<T>::setPrev(aghDnode<T>* const _prev)
 {
     prev = _prev;
 }

@@ -11,6 +11,7 @@
 // -------------------------------------------------------------------------
 
 #include "aghSnode.h"
+#include "aghContainer.h"
 // -------------------------------------------------------------------------
 
 /**
@@ -27,6 +28,11 @@ private:
     aghSnode* head; ///< wskaŸnik do pierwszego elementu listy
     int length; ///< iloœæ elementów w liœcie
 
+    /// \brief Metoda zwraca wskaŸnik do ¿¹danego wêz³a
+    ///
+    /// \param n - indeks wêz³a
+    /// \return wskaŸnik do wêz³a
+    aghSnode<T>* getSnodePtr(int n) const;
 public:
     /// \brief Konstruktor bezparametrowy
     aghSlist();
@@ -83,7 +89,17 @@ public:
 // ---------------------------------------------------------------
 
 template <class T>
-aghSlist<T>::aghSlist<T>()
+aghSnode<T>* aghSlist<T>::getSnodePtr(int n) const
+{
+    aghSnode<T>* = it;
+    for (int i = 0; i < n; ++i)
+        it = it->getNext();
+    return it;
+}
+// ---------------------------------------------------------------
+
+template <class T>
+aghSlist<T>::aghSlist()
 {
     head = nullptr;
     length = 0;
@@ -93,14 +109,22 @@ aghSlist<T>::aghSlist<T>()
 template <class T>
 aghSlist<T>::aghSlist(const aghSlist<T>& pattern)
 {
-
+    this->operator=(pattern);
 }
 // ---------------------------------------------------------------
 
 template <class T>
-aghSlist<T>::~aghSlist<T>()
+aghSlist<T>::~aghSlist()
 {
-    
+    aghSnode<T>* it = head;
+    aghSnode<T>* helper;
+
+    for (int i = 0; i < this->size(); ++i)
+    {
+        helper = it;
+        it = it->getNext();
+        delete helper;
+    }
 }
 // ---------------------------------------------------------------
 
@@ -109,7 +133,8 @@ T& aghSlist<T>::at(int n) const
 {
     if (this->invalidIndex(n))
         throw aghException(0, "Index out of range", __FILE__, __LINE__);
-   
+    aghSnode<T>* helper = this->getSnodePtr(n);
+    return helper->getData();
 }
 // --------------------------------------------------------------
 
@@ -123,14 +148,51 @@ int aghSlist<T>::size(void) const
 template <class T>
 bool aghSlist<T>::insert(int n, T const& element)
 {
-   
+    if (n < 0 || n > this->size())
+        return false;
+
+    aghSnode<T>* helper = head;
+    if (n == 0)
+    {
+        head = new aghSnode<T>*;
+        head->setNext(helper);
+        head->setData(element);
+    }
+    else
+    {
+        aghSnode<T>* it = this->getSnodePtr(n - 1);
+        helper = it->getNext();
+        it->setNext(new aghSnode<T>);
+        it->getNext()->setData(element);
+        it->getNext()->setNext(helper);
+    }
+
+    ++length;
+    return true;
 }
 // --------------------------------------------------------------
 
 template <class T>
 bool aghSlist<T>::remove(int n)
 {
-    
+    if (this->invalidIndex(n))
+        return false;
+
+    aghSnode<T>* helper = head;
+    if (n == 0)
+    {
+        head = head->getNext();
+    }
+    else
+    {
+        aghSnode<T>* it = = this->getSnodePtr(n - 1);
+        helper = it->getNext();
+        it->setNext(helper->getNext());
+    }
+    delete helper;
+
+    --length;
+    return true;
 }
 // ---------------------------------------------------------------
 
