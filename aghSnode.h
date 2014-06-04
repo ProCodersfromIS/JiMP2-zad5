@@ -42,12 +42,12 @@ public:
     void setData(const T& _data);
 
     /// \brief Metoda zwraca referencjê do zapisanych danych
-    T& getData(void) const;
+    T& getData(void);
 
     /// \brief Metoda zmienia wartoœæ pola next
     ///
     /// \param _next - nowa wartoœæ pola next
-    void setNext(const aghSnode<T>* _next);
+    void setNext(aghSnode<T>* const _next);
 
     /// \brief Metoda zwraca wartoœæ pola next
     ///
@@ -88,14 +88,14 @@ void aghSnode<T>::setData(const T& _data)
 // ---------------------------------------------------------------
 
 template <class T>
-T& aghSnode<T>::getData(void) const
+T& aghSnode<T>::getData(void)
 {
     return data;
 }
 // ---------------------------------------------------------------
 
 template <class T>
-void aghSnode<T>::setNext(const aghSnode<T>* _next)
+void aghSnode<T>::setNext(aghSnode<T>* const _next)
 {
     next = _next;
 }

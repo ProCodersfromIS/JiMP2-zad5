@@ -25,8 +25,8 @@ template <class T>
 class aghSlist: public aghContainer<T>
 {
 private:
-    aghSnode* head; ///< wskaŸnik do pierwszego elementu listy
-    int length; ///< iloœæ elementów w liœcie
+    aghSnode<T>* head = nullptr; ///< wskaŸnik do pierwszego elementu listy
+    int length = 0; ///< iloœæ elementów w liœcie
 
     /// \brief Metoda zwraca wskaŸnik do ¿¹danego wêz³a
     ///
@@ -91,7 +91,9 @@ public:
 template <class T>
 aghSnode<T>* aghSlist<T>::getSnodePtr(int n) const
 {
-    aghSnode<T>* = it;
+    if (this->invalidIndex(n))
+        throw aghException(0, "Index out of range", __FILE__, __LINE__);
+    aghSnode<T>* it = head;
     for (int i = 0; i < n; ++i)
         it = it->getNext();
     return it;
@@ -101,8 +103,6 @@ aghSnode<T>* aghSlist<T>::getSnodePtr(int n) const
 template <class T>
 aghSlist<T>::aghSlist()
 {
-    head = nullptr;
-    length = 0;
 }
 // ---------------------------------------------------------------
 
@@ -110,6 +110,13 @@ template <class T>
 aghSlist<T>::aghSlist(const aghSlist<T>& pattern)
 {
     this->operator=(pattern);
+}
+// ---------------------------------------------------------------
+
+template <class T>
+aghSlist<T>::aghSlist(const aghContainer<T>& pattern)
+{
+    this->aghContainer::operator=(pattern);
 }
 // ---------------------------------------------------------------
 
@@ -154,7 +161,7 @@ bool aghSlist<T>::insert(int n, T const& element)
     aghSnode<T>* helper = head;
     if (n == 0)
     {
-        head = new aghSnode<T>*;
+        head = new aghSnode<T>;
         head->setNext(helper);
         head->setData(element);
     }
@@ -185,7 +192,7 @@ bool aghSlist<T>::remove(int n)
     }
     else
     {
-        aghSnode<T>* it = = this->getSnodePtr(n - 1);
+        aghSnode<T>* it = this->getSnodePtr(n - 1);
         helper = it->getNext();
         it->setNext(helper->getNext());
     }
@@ -197,9 +204,9 @@ bool aghSlist<T>::remove(int n)
 // ---------------------------------------------------------------
 
 template <class T>
-aghSlist<T>& aghSlist<T>::operator=(const aghSlist<T>& pattern)
+aghSlist<T>& aghSlist<T>::operator=(const aghSlist<T>& right)
 {
-    this->aghContainer::operator(right);
+    this->aghContainer::operator=(right);
     return *this;
 }
 // ---------------------------------------------------------------

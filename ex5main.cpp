@@ -8,10 +8,10 @@ int main(void)
 {
     cout << "main by kk. Last updated 15.04.2013\n";
 
-    aghDlist<aghDlist<int> > a;
-    aghContainer<int>* c1 = new aghDlist<int>;
+    aghSlist<aghSlist<int> > a;
+    aghContainer<int>* c1 = new aghSlist<int>;
     aghContainer<int>* c2;
-    a << *((aghDlist<int>*)c1);
+    a << *((aghSlist<int>*)c1);
 
     // 1st test - dodawanie do pojemnika stalych, zmiennych, tymczasowych
     c1->append(3);
@@ -25,7 +25,7 @@ int main(void)
     showTestResult(1, t1);
 
     // 2nd test - konstruktor
-    c2 = new aghDlist<int>(*c1);
+    c2 = new aghSlist<int>(*c1);
     bool t2 = c2->size() == 3;
     int ttab2[] = {2, 3, 2};
     for(int i=0;i<3;i++)

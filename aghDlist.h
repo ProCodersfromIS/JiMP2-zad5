@@ -25,9 +25,9 @@ template <class T>
 class aghDlist : public aghContainer<T>
 {
 private:
-    aghDnode<T>* head; ///< wskaŸnik do pierwszego elementu listy
-    aghDnode<T>* tail; ///< wskaŸnik do ostatniego elementu listy
-    int length; ///< iloœæ elementów w liœcie
+    aghDnode<T>* head = nullptr; ///< wskaŸnik do pierwszego elementu listy
+    aghDnode<T>* tail = nullptr; ///< wskaŸnik do ostatniego elementu listy
+    int length = 0; ///< iloœæ elementów w liœcie
 
     /// \brief Metoda zwraca wskaŸnik do ¿¹danego wêz³a
     ///
@@ -104,18 +104,12 @@ aghDnode<T>* aghDlist<T>::getDnodePtr(int n) const
 template <class T>
 aghDlist<T>::aghDlist()
 {
-    length = 0;
-    head = nullptr;
-    tail = nullptr;
 }
 // ---------------------------------------------------------------
 
 template <class T>
 aghDlist<T>::aghDlist(const aghDlist<T>& pattern)
 {
-    length = 0;
-    head = nullptr;
-    tail = nullptr;
     this->operator=(pattern);
 }
 // ---------------------------------------------------------------
@@ -123,11 +117,7 @@ aghDlist<T>::aghDlist(const aghDlist<T>& pattern)
 template <class T>
 aghDlist<T>::aghDlist(const aghContainer<T>& pattern)
 {
-    length = 0; 
-    head = nullptr;
-    tail = nullptr;
-    for (int i = 0; i < pattern.size(); ++i)
-        this->append(pattern.at(i));
+   this->aghContainer::operator=(pattern);
 }
 // --------------------------------------------------------------
 
@@ -240,12 +230,12 @@ bool aghDlist<T>::remove(int n)
     }
     else
     {
-        aghDnode<T>* it = this->getDnodePtr(n);
-        it->getNext()->setPrev(it->getPrev());
-        it->getPrev()->setNext(it->getNext());
+        helper = this->getDnodePtr(n);
+        helper->getNext()->setPrev(helper->getPrev());
+        helper->getPrev()->setNext(helper->getNext());
+       
     }
     delete helper;
-
     --length;
     return true;
 }
